@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" >
+
+    <h:head>
+        <title>Sistema de Categorías</title>
+
+        <!-- Tema Aura Light Blue -->
+        <link rel="stylesheet" href="https://unpkg.com/primeflex@latest/themes/aura-light-blue.css" />
+        <!-- PrimeFlex -->
+        <link rel="stylesheet" href="https://unpkg.com/primeflex@latest/primeflex.min.css" />
+
+        <!-- PrimeIcons -->
+        <link rel="stylesheet" href="https://unpkg.com/primeicons/primeicons.css" />
+
+        <meta charset="UTF-8"/>
+    </h:head>
+
+    <h:body>
+
+        <div class="card">
+            <h:form id="forma-categorias">
+                <!-- Growl para mensajes -->
+                <p:growl id="mensajes" 
+                         showDetail="true" 
+                         showSummary="true" 
+                         sticky="true"
+                         life="5000" />
+
+                <div class="card">
+                    <p:menubar>
+                        <p:menuitem value="Inicio" icon="pi pi-fw pi-home"
+                                    update=":forma-categorias:categorias-tabla"
+                                    actionListener="#{categoriaControlador.cargarDatos}"/>
+                        <p:menuitem value="Nueva Categoría" icon="pi pi-fw pi-plus"
+                                    actionListener="#{categoriaControlador.agregarCategoria}"
+                                    update=":forma-modal-categoria:categoria-ventana"
+                                    oncomplete="PF('ventanaModalCategoria').show()"/>
+                        <p:menuitem value="Clientes" icon="pi pi-fw pi-users"
+                                    outcome="index" style="margin-left: auto"/>
+                    </p:menubar>
+                </div>
+
+                <!-- Datatable para Categorías -->
+                <p:dataTable value="#{categoriaControlador.categorias}" var="categoria" id="categorias-tabla"
+                             widgetVar="categoriasTabla" paginator="true" rows="10"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="5,10,15" currentPageReportTemplate="Mostrando {startRecord} a {endRecord} de {totalRecords} categorías"
+                             emptyMessage="No se encontraron categorías">
+
+                    <f:facet name="header">
+                        <div class="flex align-items-center justify-content-center flex-wrap card-container blue-container">
+                            <div class="flex align-items-center justify-content-center bg-blue-500 text-white font-bold px-4 py-2 border-round shadow-3">
+                                <i class="pi pi-tags mr-2"></i>
+                                <h3>Gestión de Categorías</h3>
+                            </div>
+                        </div>
+                    </f:facet>
+
+                    <p:column headerText="ID" width="80" style="text-align: center">
+                        <h:outputText value="#{categoria.id}" />
+                    </p:column>
+
+                    <p:column headerText="Nombre" sortBy="#{categoria.nombre}" filterBy="#{categoria.nombre}" filterMatchMode="contains">
+                        <h:outputText value="#{categoria.nombre}" />
+                    </p:column>
+
+                    <p:column headerText="Descripción" sortBy="#{categoria.descripcion}" filterBy="#{categoria.descripcion}" filterMatchMode="contains">
+                        <h:outputText value="#{categoria.descripcion}" />
+                    </p:column>
+
+                    <p:column headerText="Acciones" width="200" style="text-align: center">
+                        <!-- Botón Editar -->
+                        <p:commandButton value="Editar" icon="pi pi-pencil"
+                                         update=":forma-modal-categoria:categoria-ventana"
+                                         process="@this"
+                                         oncomplete="PF('ventanaModalCategoria').show()"
+                                         class="ui-button-primary"
+                                         style="margin-right: .5rem">
+                            <f:setPropertyActionListener value="#{categoria}"
+                                                         target="#{categoriaControlador.categoriaSeleccionada}"/>
+                            <p:resetInput target=":forma-modal-categoria:categoria-ventana"/>
+                        </p:commandButton>
+
+                        <!-- Botón Eliminar -->
+                        <p:commandButton value="Eliminar" class="ui-button-danger"
+                                         icon="pi pi-trash"
+                                         process="@this"
+                                         oncomplete="PF('eliminarCategoriaVentana').show()">
+                            <f:setPropertyActionListener
+                                value="#{categoria}"
+                                target="#{categoriaControlador.categoriaSeleccionada}"/>
+                        </p:commandButton>
+                    </p:column>
+
+                </p:dataTable>
+            </h:form>
+
+            <!-- Forma para modales de categoría -->
+            <h:form id="forma-modal-categoria">
+                <!-- Modal para agregar/editar categoría -->
+                <p:dialog header="Detalles de Categoría"
+                          widgetVar="ventanaModalCategoria"
+                          modal="true"
+                          showEffect="fade"
+                          hideEffect="fade"
+                          responsive="true"
+                          closeOnEscape="true"
+                          width="500">
+
+                    <p:outputPanel id="categoria-ventana" styleClass="ui-fluid">
+                        <div class="field">
+                            <p:outputLabel for="nombre-categoria" value="Nombre *"/>
+                            <p:inputText id="nombre-categoria" value="#{categoriaControlador.categoriaSeleccionada.nombre}"
+                                         required="true"
+                                         requiredMessage="El nombre de la categoría es requerido"
+                                         placeholder="Ingrese el nombre de la categoría"
+                                         maxlength="100"/>
+                            <small class="p-error">Campo obligatorio</small>
+                        </div>
+                        
+                        <div class="field">
+                            <p:outputLabel for="descripcion-categoria" value="Descripción"/>
+                            <p:inputTextarea id="descripcion-categoria" 
+                                            value="#{categoriaControlador.categoriaSeleccionada.descripcion}"
+                                            rows="4"
+                                            cols="30"
+                                            placeholder="Ingrese una descripción para la categoría"
+                                            maxlength="500"
+                                            autoResize="true"/>
+                            <small>Máximo 500 caracteres</small>
+                        </div>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <div class="flex justify-content-end gap-2">
+                            <p:commandButton value="Guardar" icon="pi pi-check"
+                                             process="categoria-ventana @this"
+                                             action="#{categoriaControlador.guardarCategoria}"
+                                             update=":forma-categorias:mensajes,:forma-categorias:categorias-tabla"
+                                             styleClass="ui-button-success"/>
+                            <p:commandButton value="Cancelar" icon="pi pi-times"
+                                             onclick="PF('ventanaModalCategoria').hide()"
+                                             styleClass="ui-button-secondary" 
+                                             type="button"/>
+                        </div>
+                    </f:facet>
+                </p:dialog>
+
+                <!-- Modal de confirmación para eliminar -->
+                <p:confirmDialog widgetVar="eliminarCategoriaVentana"
+                                 showEffect="fade" 
+                                 hideEffect="fade"
+                                 width="400"
+                                 message="¿Está seguro de eliminar la categoría '#{categoriaControlador.categoriaSeleccionada.nombre}'?"
+                                 header="Confirmar Eliminación" 
+                                 severity="alert">
+
+                    <f:facet name="footer">
+                        <div class="flex justify-content-end gap-2">
+                            <p:commandButton value="Sí, Eliminar" 
+                                             icon="pi pi-check"
+                                             process="@this"
+                                             actionListener="#{categoriaControlador.eliminarCategoria}"
+                                             oncomplete="PF('eliminarCategoriaVentana').hide()"
+                                             styleClass="ui-button-danger"/>
+                            <p:commandButton value="No, Cancelar" 
+                                             type="button"
+                                             styleClass="ui-button-secondary"
+                                             icon="pi pi-times"
+                                             onclick="PF('eliminarCategoriaVentana').hide()"/>
+                        </div>
+                    </f:facet>
+                </p:confirmDialog>
+            </h:form>
+        </div>
+
+        <!-- Panel de estadísticas (opcional) -->
+        <div class="card mt-3">
+            <div class="flex flex-wrap justify-content-around">
+                <div class="bg-green-100 text-green-800 border-round p-3 m-2 flex-1">
+                    <div class="text-center">
+                        <i class="pi pi-tags text-2xl"></i>
+                        <div class="text-xl font-bold">#{categoriaControlador.categorias.size()}</div>
+                        <div class="text-sm">Total Categorías</div>
+                    </div>
+                </div>
+                <div class="bg-blue-100 text-blue-800 border-round p-3 m-2 flex-1">
+                    <div class="text-center">
+                        <i class="pi pi-check-circle text-2xl"></i>
+                        <div class="text-xl font-bold">#{categoriaControlador.categorias.stream().filter(c -&gt; c.descripcion != null and !c.descripcion.isEmpty()).count()}</div>
+                        <div class="text-sm">Con Descripción</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </h:body>
+</html>
