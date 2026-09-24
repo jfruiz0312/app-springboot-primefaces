@@ -1,9 +1,8 @@
-package com.app.spring.primefaces.servicio;
+package com.app.spring.primefaces.services;
 
-import com.app.spring.primefaces.datos.ICategoriaRepository;
-import com.app.spring.primefaces.modelo.Categoria;
+import com.app.spring.primefaces.repositoy.ICategoriaRepository;
+import com.app.spring.primefaces.entities.Categoria;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

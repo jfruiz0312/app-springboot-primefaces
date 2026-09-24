@@ -1,13 +1,10 @@
-package com.app.spring.primefaces.servicio;
+package com.app.spring.primefaces.services;
 
-import com.app.spring.primefaces.modelo.Categoria;
+import com.app.spring.primefaces.entities.Categoria;
 import java.util.List;
 import java.util.Optional;
 
-/**
- *
- * @author ruiz_
- */
+
 public interface ICategoriaServicio extends IGenericServicio<Categoria, Integer> {
 
     // Métodos específicos para Categoria

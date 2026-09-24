@@ -1,7 +1,7 @@
-package com.app.spring.primefaces.controlador;
+package com.app.spring.primefaces.controllers;
 
-import com.app.spring.primefaces.modelo.Cliente;
-import com.app.spring.primefaces.servicio.IClienteServicio;
+import com.app.spring.primefaces.entities.Cliente;
+import com.app.spring.primefaces.services.IClienteServicio;
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
@@ -97,6 +97,10 @@ public class IndexControlador implements Serializable{
                     "Error al eliminar cliente", e.getMessage()));
             PrimeFaces.current().ajax().update("forma-clientes:mensajes");
         }
+    }
+
+    public String irCategorias() {
+        return "/views/categorias.xhtml?faces-redirect=true";
     }
 
     public IClienteServicio getClienteServicio() {

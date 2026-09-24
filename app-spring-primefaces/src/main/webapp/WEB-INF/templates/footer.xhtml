@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<ui:composition>
+    <div style="display: flex; justify-content: space-between; align-items: center; height: 100%;">
+        <div>
+            <span class="header-title">
+                <i class="fa fa-dumbbell" style="margin-right: 10px;"></i>
+                Zona Fit
+            </span>
+            <span class="header-subtitle">Sistema de Gestión</span>
+        </div>
+        <div class="user-info">
+            <i class="fa fa-user-circle"></i>
+            <span>Administrador</span>
+            <p:commandButton value="Cerrar Sesión"
+                             icon="fa fa-sign-out-alt"
+                             styleClass="ui-button-secondary"
+                             style="margin-left: 15px; background: transparent; border: 1px solid #ecf0f1; color: white;"
+                             action="#{loginBean.logout}"/>
+        </div>
+    </div>
+</ui:composition>
+</html>

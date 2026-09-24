@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<ui:composition template="/WEB-INF/templates/master.xhtml">
+
+    <ui:define name="content">
+        <h1 style="color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px;">
+            <i class="fa fa-users"></i> Gestión de Clientes
+        </h1>
+
+        <p:toolbar style="margin: 20px 0;">
+            <p:toolbarGroup align="left">
+                <p:commandButton value="Nuevo Cliente"
+                                 icon="fa fa-plus"
+                                 styleClass="ui-button-success"
+                                 action="#{clienteBean.nuevoCliente}"/>
+                <p:commandButton value="Actualizar"
+                                 icon="fa fa-refresh"
+                                 styleClass="ui-button-secondary"
+                                 action="#{clienteBean.actualizarLista}"
+                                 update="tablaClientes"/>
+            </p:toolbarGroup>
+            <p:toolbarGroup align="right">
+                <p:inputText placeholder="Buscar cliente..."
+                             value="#{clienteBean.filtro}"
+                             style="width: 200px;"/>
+                <p:commandButton value="Buscar"
+                                 icon="fa fa-search"
+                                 action="#{clienteBean.buscar}"
+                                 update="tablaClientes"/>
+            </p:toolbarGroup>
+        </p:toolbar>
+
+        <p:dataTable id="tablaClientes"
+                     value="#{clienteBean.clientes}"
+                     var="cliente"
+                     paginator="true"
+                     rows="10"
+                     style="width: 100%;"
+                     emptyMessage="No hay clientes registrados">
+
+            <p:column headerText="ID" field="id" style="width: 80px;"/>
+            <p:column headerText="Nombre" field="nombre"/>
+            <p:column headerText="Email" field="email"/>
+            <p:column headerText="Teléfono" field="telefono"/>
+            <p:column headerText="Fecha Registro" field="fechaRegistro"/>
+
+            <p:column headerText="Acciones" style="width: 150px;">
+                <p:commandButton value="Editar"
+                                 icon="fa fa-edit"
+                                 styleClass="ui-button-warning"
+                                 action="#{clienteBean.editarCliente(cliente)}"/>
+                <p:commandButton value="Eliminar"
+                                 icon="fa fa-trash"
+                                 styleClass="ui-button-danger"
+                                 action="#{clienteBean.eliminarCliente(cliente)}">
+                    <p:confirm header="Confirmar Eliminación"
+                               message="¿Está seguro de eliminar este cliente?"
+                               icon="fa fa-exclamation-triangle"/>
+                </p:commandButton>
+            </p:column>
+        </p:dataTable>
+
+        <p:confirmDialog global="true"
+                         showEffect="fade"
+                         hideEffect="fade">
+            <p:commandButton value="Sí" type="button" styleClass="ui-button-danger" icon="fa fa-check"/>
+            <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="fa fa-times"/>
+        </p:confirmDialog>
+    </ui:define>
+
+</ui:composition>
+</html>

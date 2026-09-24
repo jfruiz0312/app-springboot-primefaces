@@ -1,7 +1,7 @@
-package com.app.spring.primefaces.servicio;
+package com.app.spring.primefaces.services;
 
-import com.app.spring.primefaces.datos.ClienteRepositorio;
-import com.app.spring.primefaces.modelo.Cliente;
+import com.app.spring.primefaces.repositoy.ClienteRepositorio;
+import com.app.spring.primefaces.entities.Cliente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Zona Fit - #{view.viewId}</title>
+
+    <style>
+        .ui-layout-north {
+            background: #2c3e50 !important;
+            color: white !important;
+            border: none !important;
+            padding: 0 !important;
+        }
+        .ui-layout-south {
+            background: #2c3e50 !important;
+            color: white !important;
+            border: none !important;
+            text-align: center !important;
+            padding: 10px !important;
+        }
+        .ui-layout-west {
+            background: #34495e !important;
+            border: none !important;
+            padding: 0 !important;
+        }
+        .ui-layout-center {
+            background: #ecf0f1 !important;
+            padding: 20px !important;
+        }
+        .ui-menubar {
+            border: none !important;
+            background: #34495e !important;
+        }
+        .ui-menubar .ui-menuitem-link {
+            color: white !important;
+        }
+        .ui-menubar .ui-menuitem-link:hover {
+            background: #2c3e50 !important;
+        }
+        .header-title {
+            font-size: 24px;
+            font-weight: bold;
+            padding: 15px 20px;
+            margin: 0;
+            display: inline-block;
+        }
+        .header-subtitle {
+            font-size: 14px;
+            color: #bdc3c7;
+            margin-left: 10px;
+        }
+        .footer-text {
+            color: #bdc3c7;
+            font-size: 12px;
+        }
+        .content-wrapper {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            min-height: 400px;
+        }
+        .user-info {
+            float: right;
+            padding: 15px 20px;
+            color: #ecf0f1;
+        }
+        .user-info i {
+            margin-right: 5px;
+        }
+    </style>
+</h:head>
+
+<h:body>
+    <p:layout style="min-height: 100vh; min-width: 100%;">
+
+        <!-- HEADER -->
+        <p:layoutUnit position="north" size="80" resizable="false" closable="false" collapsible="false">
+            <ui:insert name="header">
+                <ui:include src="/WEB-INF/templates/header.xhtml"/>
+            </ui:insert>
+        </p:layoutUnit>
+
+        <!-- MENU LATERAL -->
+        <p:layoutUnit position="west" size="250" resizable="true" closable="true" collapsible="true">
+            <ui:insert name="menu">
+                <ui:include src="/WEB-INF/templates/menu.xhtml"/>
+            </ui:insert>
+        </p:layoutUnit>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <p:layoutUnit position="center">
+            <div class="content-wrapper">
+                <ui:insert name="content">
+                    <h1 style="color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px;">
+                        Bienvenido a Zona Fit
+                    </h1>
+                    <p style="font-size: 16px; color: #555;">
+                        Sistema de Gestión Deportiva
+                    </p>
+                </ui:insert>
+            </div>
+        </p:layoutUnit>
+
+        <!-- FOOTER -->
+        <p:layoutUnit position="south" size="50" resizable="false" closable="false" collapsible="false">
+            <ui:insert name="footer">
+                <ui:include src="/WEB-INF/templates/footer.xhtml"/>
+            </ui:insert>
+        </p:layoutUnit>
+
+    </p:layout>
+</h:body>
+</html>

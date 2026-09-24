@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/WEB-INF/templates/master.xhtml">
+
+    <ui:define name="pageTitle">Facturacion - Categorias</ui:define>
+
+    <ui:define name="menu">
+        <h:form id="menu-categorias">
+            <p:menubar>
+                <p:menuitem value="Categorias" icon="pi pi-fw pi-tags"
+                            actionListener="#{categoriaControlador.cargarDatos}"
+                            update=":forma-categorias:categorias-tabla"/>
+                <p:menuitem value="Clientes" icon="pi pi-fw pi-users"
+                            action="#{categoriaControlador.irClientes}"
+                            ajax="false"/>
+                <p:menuitem value="Nueva Categoria" icon="pi pi-fw pi-plus"
+                            actionListener="#{categoriaControlador.agregarCategoria}"
+                            update=":forma-modal-categoria:categoria-ventana"
+                            oncomplete="PF('ventanaModalCategoria').show()"
+                            style="margin-left: auto"/>
+            </p:menubar>
+        </h:form>
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form id="forma-categorias">
+            <p:growl id="mensajes" showDetail="true" showSummary="true" sticky="true" life="5000" />
+
+            <p:dataTable value="#{categoriaControlador.categorias}" var="categoria" id="categorias-tabla"
+                         widgetVar="categoriasTabla" paginator="true" rows="10"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15"
+                         currentPageReportTemplate="Mostrando {startRecord} a {endRecord} de {totalRecords} categorias"
+                         emptyMessage="No se encontraron categorias">
+
+                <f:facet name="header">
+                    <div class="flex align-items-center justify-content-center flex-wrap card-container blue-container">
+                        <div class="flex align-items-center justify-content-center bg-blue-500 text-white font-bold px-4 py-2 border-round shadow-3">
+                            <i class="pi pi-tags mr-2"></i>
+                            <h3>Gestion de Categorias</h3>
+                        </div>
+                    </div>
+                </f:facet>
+
+                <p:column headerText="ID" width="80" style="text-align: center">
+                    <h:outputText value="#{categoria.id}" />
+                </p:column>
+                <p:column headerText="Nombre" sortBy="#{categoria.nombre}" filterBy="#{categoria.nombre}" filterMatchMode="contains">
+                    <h:outputText value="#{categoria.nombre}" />
+                </p:column>
+                <p:column headerText="Descripcion" sortBy="#{categoria.descripcion}" filterBy="#{categoria.descripcion}" filterMatchMode="contains">
+                    <h:outputText value="#{categoria.descripcion}" />
+                </p:column>
+
+                <p:column headerText="Acciones" width="200" style="text-align: center">
+                    <p:commandButton value="Editar" icon="pi pi-pencil"
+                                     update=":forma-modal-categoria:categoria-ventana"
+                                     process="@this"
+                                     oncomplete="PF('ventanaModalCategoria').show()"
+                                     styleClass="ui-button-primary"
+                                     style="margin-right: .5rem">
+                        <f:setPropertyActionListener value="#{categoria}" target="#{categoriaControlador.categoriaSeleccionada}"/>
+                        <p:resetInput target=":forma-modal-categoria:categoria-ventana"/>
+                    </p:commandButton>
+
+                    <p:commandButton value="Eliminar" styleClass="ui-button-danger"
+                                     icon="pi pi-trash"
+                                     process="@this"
+                                     oncomplete="PF('eliminarCategoriaVentana').show()">
+                        <f:setPropertyActionListener value="#{categoria}" target="#{categoriaControlador.categoriaSeleccionada}"/>
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+
+        <h:form id="forma-modal-categoria">
+            <p:dialog header="Detalles de Categoria"
+                      widgetVar="ventanaModalCategoria"
+                      modal="true"
+                      showEffect="fade"
+                      hideEffect="fade"
+                      responsive="true"
+                      closeOnEscape="true"
+                      width="500">
+                <p:outputPanel id="categoria-ventana" styleClass="ui-fluid">
+                    <div class="field">
+                        <p:outputLabel for="nombre-categoria" value="Nombre *"/>
+                        <p:inputText id="nombre-categoria" value="#{categoriaControlador.categoriaSeleccionada.nombre}"
+                                     required="true"
+                                     requiredMessage="El nombre de la categoria es requerido"
+                                     placeholder="Ingrese el nombre de la categoria"
+                                     maxlength="100"/>
+                        <small class="p-error">Campo obligatorio</small>
+                    </div>
+                    <div class="field">
+                        <p:outputLabel for="descripcion-categoria" value="Descripcion"/>
+                        <p:inputTextarea id="descripcion-categoria"
+                                         value="#{categoriaControlador.categoriaSeleccionada.descripcion}"
+                                         rows="4"
+                                         cols="30"
+                                         placeholder="Ingrese una descripcion para la categoria"
+                                         maxlength="500"
+                                         autoResize="true"/>
+                        <small>Maximo 500 caracteres</small>
+                    </div>
+                </p:outputPanel>
+
+                <f:facet name="footer">
+                    <div class="flex justify-content-end gap-2">
+                        <p:commandButton value="Guardar" icon="pi pi-check"
+                                         process="categoria-ventana @this"
+                                         action="#{categoriaControlador.guardarCategoria}"
+                                         update=":forma-categorias:mensajes,:forma-categorias:categorias-tabla"
+                                         styleClass="ui-button-success"/>
+                        <p:commandButton value="Cancelar" icon="pi pi-times"
+                                         onclick="PF('ventanaModalCategoria').hide()"
+                                         styleClass="ui-button-secondary"
+                                         type="button"/>
+                    </div>
+                </f:facet>
+            </p:dialog>
+
+            <p:confirmDialog widgetVar="eliminarCategoriaVentana"
+                             showEffect="fade"
+                             hideEffect="fade"
+                             width="400"
+                             message="Esta seguro de eliminar la categoria '#{categoriaControlador.categoriaSeleccionada.nombre}'?"
+                             header="Confirmar Eliminacion"
+                             severity="alert">
+                <f:facet name="footer">
+                    <div class="flex justify-content-end gap-2">
+                        <p:commandButton value="Si, Eliminar"
+                                         icon="pi pi-check"
+                                         process="@this"
+                                         actionListener="#{categoriaControlador.eliminarCategoria}"
+                                         oncomplete="PF('eliminarCategoriaVentana').hide()"
+                                         styleClass="ui-button-danger"/>
+                        <p:commandButton value="No, Cancelar"
+                                         type="button"
+                                         styleClass="ui-button-secondary"
+                                         icon="pi pi-times"
+                                         onclick="PF('eliminarCategoriaVentana').hide()"/>
+                    </div>
+                </f:facet>
+            </p:confirmDialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

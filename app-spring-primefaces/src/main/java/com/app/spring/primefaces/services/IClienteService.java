@@ -1,6 +1,6 @@
-package com.app.spring.primefaces.servicio;
+package com.app.spring.primefaces.services;
 
-import com.app.spring.primefaces.modelo.Cliente;
+import com.app.spring.primefaces.entities.Cliente;
 
 import java.util.List;
 
